@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox fx:id="root" minHeight="330" minWidth="430" prefHeight="430.0" prefWidth="700" stylesheets="@../css/main-view.css"
+      xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="cn.octopusyan.dayzmodtranslator.controller.MainController">
+    <MenuBar>
+        <Menu mnemonicParsing="false" text="文件">
+            <MenuItem fx:id="openFileSetupBtn" mnemonicParsing="false" styleClass="conf_menu_item" text="打开"/>
+            <SeparatorMenuItem/>
+            <MenuItem onAction="#onDestroy" mnemonicParsing="false" styleClass="conf_menu_item" text="退出"/>
+        </Menu>
+        <Menu mnemonicParsing="false" text="设置">
+            <MenuItem fx:id="translateSetupBtn" mnemonicParsing="false" styleClass="conf_menu_item" text="翻译"/>
+            <MenuItem fx:id="proxySetupBtn" mnemonicParsing="false" styleClass="conf_menu_item" text="代理"/>
+        </Menu>
+        <Menu mnemonicParsing="false" text="帮助">
+            <MenuItem mnemonicParsing="false" styleClass="conf_menu_item" text="关于"/>
+        </Menu>
+    </MenuBar>
+    <HBox alignment="CENTER_LEFT">
+        <Label text="PBO文件:">
+            <HBox.margin>
+                <Insets right="5.0"/>
+            </HBox.margin>
+        </Label>
+        <Label fx:id="filePath"/>
+        <HBox HBox.hgrow="ALWAYS"/>
+        <HBox>
+            <Button fx:id="translateWordBtn" text="一键翻译" visible="false"/>
+            <Button fx:id="packBtn" text="打包" visible="false">
+                <HBox.margin>
+                    <Insets left="5"/>
+                </HBox.margin>
+            </Button>
+        </HBox>
+        <VBox.margin>
+            <Insets bottom="5.0" top="5.0"/>
+        </VBox.margin>
+        <padding>
+            <Insets left="5.0" right="5.0"/>
+        </padding>
+    </HBox>
+    <SplitPane dividerPositions="0.3" prefHeight="${root.height}">
+        <StackPane fx:id="fileBox" SplitPane.resizableWithParent="false" maxWidth="420" minWidth="210">
+            <VBox fx:id="openFileBox" alignment="CENTER" styleClass="box_class">
+                <Button fx:id="openFile" text="打开文件"/>
+                <Label style="-fx-text-fill: rgba(136,136,136,0.7)" text="或将 pbo文件 拖到此处">
+                    <VBox.margin>
+                        <Insets top="10.0"/>
+                    </VBox.margin>
+                </Label>
+            </VBox>
+            <VBox fx:id="dragFileBox" alignment="CENTER" styleClass="box_class" visible="false">
+                <Label fx:id="dragFileLabel" alignment="CENTER" prefHeight="-Infinity" text="将文件拖放到此处"
+                       textAlignment="CENTER"/>
+            </VBox>
+            <VBox fx:id="loadFileBox" alignment="CENTER" styleClass="box_class" visible="false">
+                <Label fx:id="loadFileLabel"/>
+                <ProgressBar fx:id="loadFileProgressBar"/>
+            </VBox>
+            <TreeView fx:id="treeFileBox" styleClass="box_class" visible="false"/>
+        </StackPane>
+        <StackPane fx:id="wordBox" styleClass="box_class" GridPane.columnIndex="1" minWidth="210">
+            <VBox fx:id="wordMsgBox" alignment="CENTER" styleClass="box_class">
+                <Label fx:id="wordMsgLabel"/>
+                <ProgressBar fx:id="loadWordProgressBar" visible="false"/>
+            </VBox>
+        </StackPane>
+    </SplitPane>
+</VBox>

@@ -1,0 +1,9 @@
+#root{
+    -fx-background-color: white;
+}
+
+#dragFileLabel {
+    -fx-font-family: "Microsoft YaHei";
+    -fx-text-fill: black;
+    -fx-font-size: 20;
+}

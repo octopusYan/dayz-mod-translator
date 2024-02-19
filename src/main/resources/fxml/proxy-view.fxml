@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<StackPane fx:id="root" prefHeight="276.0" prefWidth="260.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="cn.octopusyan.dayzmodtranslator.controller.SetupProxyController">
+    <VBox alignment="CENTER_LEFT">
+        <Label alignment="CENTER" prefWidth="Infinity" text="网络代理设置"/>
+        <Label text="Host">
+            <VBox.margin>
+                <Insets top="20"/>
+            </VBox.margin>
+        </Label>
+        <TextField fx:id="hostField">
+            <VBox.margin>
+                <Insets top="5.0"/>
+            </VBox.margin>
+        </TextField>
+        <Label text="port">
+            <VBox.margin>
+                <Insets top="15.0"/>
+            </VBox.margin>
+        </Label>
+        <TextField fx:id="portField">
+            <VBox.margin>
+                <Insets top="5.0"/>
+            </VBox.margin>
+        </TextField>
+        <Label text="测试地址">
+            <VBox.margin>
+                <Insets top="15.0"/>
+            </VBox.margin>
+        </Label>
+        <TextField fx:id="testPath">
+            <VBox.margin>
+                <Insets top="5.0"/>
+            </VBox.margin>
+        </TextField>
+        <VBox alignment="CENTER">
+            <VBox.margin>
+                <Insets top="5.0"/>
+            </VBox.margin>
+            <Button onAction="#test" style="-fx-background-color: transparent; -fx-text-fill: #000FFF"
+                    text="网络代理测试"/>
+        </VBox>
+        <HBox alignment="CENTER_RIGHT">
+            <VBox.margin>
+                <Insets top="15.0"/>
+            </VBox.margin>
+            <Button text="确定" onAction="#save">
+                <padding>
+                    <Insets bottom="5.0" left="15.0" right="15.0" top="5.0"/>
+                </padding>
+            </Button>
+            <Button text="取消" onAction="#close">
+                <HBox.margin>
+                    <Insets left="5.0"/>
+                </HBox.margin>
+                <padding>
+                    <Insets bottom="5.0" left="15.0" right="15.0" top="5.0"/>
+                </padding>
+            </Button>
+        </HBox>
+        <StackPane.margin>
+            <Insets left="20.0" right="20.0"/>
+        </StackPane.margin>
+    </VBox>
+</StackPane>
