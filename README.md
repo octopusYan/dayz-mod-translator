@@ -6,3 +6,7 @@
 
 ![Main window start](doc/img/screenshot01.png 'Main application window start')
 ![Main window open file](doc/img/screenshot02.png 'Main window open file')
+
+## 感谢
+
+[winseros / pboman3](https://github.com/winseros/pboman3) ：一个简单好用的PBO文件处理工具
