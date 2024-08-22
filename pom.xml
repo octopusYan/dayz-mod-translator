@@ -169,9 +169,8 @@
             <plugin>
                 <groupId>io.github.fvarrui</groupId>
                 <artifactId>javapackager</artifactId>
-                <version>1.7.5</version>
+                <version>1.7.6</version>
                 <configuration>
-                    <bundleJre>true</bundleJre>
                     <mainClass>cn.octopusyan.dayzmodtranslator.AppLuncher</mainClass>
                     <generateInstaller>false</generateInstaller>
                 </configuration>
@@ -183,6 +182,20 @@
                             <goal>package</goal>
                         </goals>
                         <configuration>
+                            <name>${project.name}-nojre_${project.version}</name>
+                            <platform>windows</platform>
+                            <createZipball>true</createZipball>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>bundling-for-windows-with-jre</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                        <configuration>
+                            <name>${project.name}_${project.version}</name>
+                            <bundleJre>true</bundleJre>
                             <platform>windows</platform>
                             <createZipball>true</createZipball>
                         </configuration>
