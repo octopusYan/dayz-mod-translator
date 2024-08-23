@@ -22,12 +22,11 @@
         <maven.compiler.target>17</maven.compiler.target>
         <java.version>17</java.version>
 
-        <junit.version>5.10.0</junit.version>
-        <javafx.version>17.0.6</javafx.version>
-        <slf4j.version>2.0.12</slf4j.version>
-        <logback.version>1.4.14</logback.version>
-        <fastjson.version>2.0.46</fastjson.version>
-        <hutool.version>5.8.25</hutool.version>
+        <junit.version>5.11.0</junit.version>
+        <javafx.version>17.0.12</javafx.version>
+        <slf4j.version>2.0.16</slf4j.version>
+        <logback.version>1.5.7</logback.version>
+        <fastjson.version>2.0.52</fastjson.version>
     </properties>
 
     <dependencies>
@@ -89,13 +88,13 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.14.0</version>
+            <version>3.16.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.15.1</version>
+            <version>2.16.1</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-exec -->
         <dependency>
@@ -113,6 +112,21 @@
         </dependency>
     </dependencies>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>nexus</id>
+            <name>nexus-snapshot-repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
         <resources>
             <resource>
@@ -125,7 +139,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.13.0</version>
                 <configuration>
                     <source>17</source>
                     <target>17</target>
@@ -135,7 +149,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.3.1</version>
                 <configuration>
                     <nonFilteredFileExtensions>
                         <nonFilteredFileExtension>exe</nonFilteredFileExtension>
@@ -153,7 +167,8 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>cn.octopusyan.dayzmodtranslator/cn.octopusyan.dayzmodtranslator.AppLuncher
+                            <mainClass>
+                                cn.octopusyan.dayzmodtranslator/cn.octopusyan.dayzmodtranslator.AppLuncher
                             </mainClass>
                             <launcher>launcher</launcher>
                             <jlinkZipName>app</jlinkZipName>
@@ -169,8 +184,9 @@
             <plugin>
                 <groupId>io.github.fvarrui</groupId>
                 <artifactId>javapackager</artifactId>
-                <version>1.7.6</version>
+                <version>1.7.7-SNAPSHOT</version>
                 <configuration>
+                    <bundleJre>true</bundleJre>
                     <mainClass>cn.octopusyan.dayzmodtranslator.AppLuncher</mainClass>
                     <generateInstaller>false</generateInstaller>
                 </configuration>
@@ -182,20 +198,6 @@
                             <goal>package</goal>
                         </goals>
                         <configuration>
-                            <name>${project.name}-nojre_${project.version}</name>
-                            <platform>windows</platform>
-                            <createZipball>true</createZipball>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>bundling-for-windows-with-jre</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>package</goal>
-                        </goals>
-                        <configuration>
-                            <name>${project.name}_${project.version}</name>
-                            <bundleJre>true</bundleJre>
                             <platform>windows</platform>
                             <createZipball>true</createZipball>
                         </configuration>
