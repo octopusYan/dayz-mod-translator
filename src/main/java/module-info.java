@@ -1,4 +1,4 @@
-module cn.octopusyan.dayzmodtranslator {
+module cn.octopusyan.dmt {
     requires java.net.http;
     requires javafx.controls;
     requires javafx.fxml;
@@ -9,14 +9,20 @@ module cn.octopusyan.dayzmodtranslator {
     requires org.slf4j;
     requires ch.qos.logback.core;
     requires ch.qos.logback.classic;
-    requires com.alibaba.fastjson2;
+    requires static lombok;
+    requires atlantafx.base;
+    requires com.fasterxml.jackson.annotation;
+    requires com.fasterxml.jackson.databind;
+    requires com.fasterxml.jackson.dataformat.yaml;
+    requires java.prefs;
+    requires org.kordamp.ikonli.javafx;
+    requires org.kordamp.ikonli.feather;
 
-    exports cn.octopusyan.dayzmodtranslator;
-    opens cn.octopusyan.dayzmodtranslator to javafx.fxml;
-    exports cn.octopusyan.dayzmodtranslator.base;
-    opens cn.octopusyan.dayzmodtranslator.base to javafx.fxml;
-    exports cn.octopusyan.dayzmodtranslator.controller;
-    opens cn.octopusyan.dayzmodtranslator.controller to javafx.fxml;
-    exports cn.octopusyan.dayzmodtranslator.manager.word;
-    opens cn.octopusyan.dayzmodtranslator.manager.word to javafx.base;
+    exports cn.octopusyan.dmt;
+    exports cn.octopusyan.dmt.model to com.fasterxml.jackson.databind;
+    opens cn.octopusyan.dmt.model to javafx.base;
+    opens cn.octopusyan.dmt.common.base to javafx.fxml;
+    opens cn.octopusyan.dmt.controller to javafx.fxml;
+    opens cn.octopusyan.dmt.controller.component to javafx.fxml;
+    opens cn.octopusyan.dmt.view.filemanager to javafx.fxml;
 }

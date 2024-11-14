@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="cn.octopusyan.dmt.controller.TranslateController"
+      fx:id="root" prefHeight="400.0" prefWidth="600.0">
+
+    <padding>
+        <Insets topRightBottomLeft="20"/>
+    </padding>
+
+    <VBox>
+        <Label text="翻译源">
+            <VBox.margin>
+                <Insets right="15.0"/>
+            </VBox.margin>
+        </Label>
+        <ComboBox fx:id="translateSourceCombo">
+            <VBox.margin>
+                <Insets top="5.0"/>
+            </VBox.margin>
+        </ComboBox>
+    </VBox>
+    <VBox alignment="CENTER_LEFT">
+        <VBox.margin>
+            <Insets top="15.0"/>
+        </VBox.margin>
+        <Label text="QPS(每秒请求数量)">
+            <VBox.margin>
+                <Insets right="15.0"/>
+            </VBox.margin>
+        </Label>
+        <TextField fx:id="qps">
+            <VBox.margin>
+                <Insets top="5.0"/>
+            </VBox.margin>
+        </TextField>
+    </VBox>
+    <VBox alignment="CENTER_LEFT" fx:id="appidBox">
+        <VBox.margin>
+            <Insets top="15.0"/>
+        </VBox.margin>
+        <Label text="appid">
+            <VBox.margin>
+                <Insets right="15.0"/>
+            </VBox.margin>
+        </Label>
+        <TextField fx:id="appid">
+            <VBox.margin>
+                <Insets top="5.0"/>
+            </VBox.margin>
+        </TextField>
+    </VBox>
+    <VBox alignment="CENTER_LEFT" fx:id="apikeyBox">
+        <VBox.margin>
+            <Insets top="15.0"/>
+        </VBox.margin>
+        <Label text="apikey">
+            <VBox.margin>
+                <Insets right="15.0"/>
+            </VBox.margin>
+        </Label>
+        <TextField fx:id="apikey">
+            <VBox.margin>
+                <Insets top="5.0"/>
+            </VBox.margin>
+        </TextField>
+    </VBox>
+    <HBox alignment="CENTER_RIGHT">
+        <VBox.margin>
+            <Insets top="15.0"/>
+        </VBox.margin>
+        <Button onAction="#save" text="确定">
+            <padding>
+                <Insets bottom="5.0" left="15.0" right="15.0" top="5.0"/>
+            </padding>
+        </Button>
+        <Button onAction="#onDestroy" text="取消">
+            <HBox.margin>
+                <Insets left="5.0"/>
+            </HBox.margin>
+            <padding>
+                <Insets bottom="5.0" left="15.0" right="15.0" top="5.0"/>
+            </padding>
+        </Button>
+    </HBox>
+</VBox>

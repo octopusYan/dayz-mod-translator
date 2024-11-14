@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="cn.octopusyan.dmt.controller.ProxyController"
+      fx:id="root" prefHeight="400.0" prefWidth="600.0" spacing="10">
+
+    <padding>
+        <Insets topRightBottomLeft="20"/>
+    </padding>
+
+    <RadioButton fx:id="noneProxy" text="不使用代理"/>
+
+    <Separator/>
+
+    <RadioButton fx:id="systemProxy" text="使用系统代理"/>
+
+    <Separator/>
+
+    <RadioButton fx:id="manualProxy" text="自定义代理"/>
+
+    <GridPane fx:id="manualProxyView" vgap="10" hgap="10">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="10"/>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="40"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES"/>
+            <RowConstraints vgrow="SOMETIMES"/>
+        </rowConstraints>
+        <padding>
+            <Insets left="30"/>
+        </padding>
+        <Label text="主机"/>
+        <TextField fx:id="proxyHost" promptText="127.0.0.1" GridPane.columnIndex="1"/>
+        <Label text="端口" GridPane.rowIndex="1"/>
+        <TextField fx:id="proxyPort" promptText="8080" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    </GridPane>
+
+    <Button onAction="#proxyTest" text="检查连接"/>
+</VBox>

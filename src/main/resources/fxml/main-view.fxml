@@ -1,73 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import atlantafx.base.controls.Spacer?>
+<?import cn.octopusyan.dmt.view.filemanager.DirectoryTree?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox fx:id="root" minHeight="330" minWidth="430" prefHeight="430.0" prefWidth="700" stylesheets="@../css/main-view.css"
-      xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="cn.octopusyan.dayzmodtranslator.controller.MainController">
-    <MenuBar>
-        <Menu mnemonicParsing="false" text="文件">
-            <MenuItem fx:id="openFileSetupBtn" mnemonicParsing="false" styleClass="conf_menu_item" text="打开"/>
-            <SeparatorMenuItem/>
-            <MenuItem onAction="#onDestroy" mnemonicParsing="false" styleClass="conf_menu_item" text="退出"/>
-        </Menu>
-        <Menu mnemonicParsing="false" text="设置">
-            <MenuItem fx:id="translateSetupBtn" mnemonicParsing="false" styleClass="conf_menu_item" text="翻译"/>
-            <MenuItem fx:id="proxySetupBtn" mnemonicParsing="false" styleClass="conf_menu_item" text="代理"/>
-        </Menu>
-        <Menu mnemonicParsing="false" text="帮助">
-            <MenuItem mnemonicParsing="false" styleClass="conf_menu_item" text="关于"/>
-        </Menu>
-    </MenuBar>
-    <HBox alignment="CENTER_LEFT">
-        <Label text="PBO文件:">
-            <HBox.margin>
-                <Insets right="5.0"/>
-            </HBox.margin>
-        </Label>
-        <Label fx:id="filePath"/>
-        <HBox HBox.hgrow="ALWAYS"/>
-        <HBox>
-            <Button fx:id="translateWordBtn" text="一键翻译" visible="false"/>
-            <Button fx:id="packBtn" text="打包" visible="false">
-                <HBox.margin>
-                    <Insets left="5"/>
-                </HBox.margin>
-            </Button>
-        </HBox>
-        <VBox.margin>
-            <Insets bottom="5.0" top="5.0"/>
-        </VBox.margin>
-        <padding>
-            <Insets left="5.0" right="5.0"/>
-        </padding>
-    </HBox>
-    <SplitPane dividerPositions="0.3" prefHeight="${root.height}">
-        <StackPane fx:id="fileBox" SplitPane.resizableWithParent="false" maxWidth="420" minWidth="210">
-            <VBox fx:id="openFileBox" alignment="CENTER" styleClass="box_class">
-                <Button fx:id="openFile" text="打开文件"/>
-                <Label style="-fx-text-fill: rgba(136,136,136,0.7)" text="或将 pbo文件 拖到此处">
-                    <VBox.margin>
-                        <Insets top="10.0"/>
-                    </VBox.margin>
-                </Label>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<StackPane xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1"
+           fx:id="root" prefHeight="800.0" prefWidth="1000.0"
+           fx:controller="cn.octopusyan.dmt.controller.MainController">
+
+    <VBox alignment="TOP_CENTER" prefWidth="${root.width}" prefHeight="Infinity">
+        <MenuBar prefWidth="Infinity">
+            <Menu mnemonicParsing="false" text="文件">
+                <MenuItem text="打开" onAction="#selectFile">
+                    <graphic>
+                        <FontIcon iconLiteral="fth-folder"/>
+                    </graphic>
+                </MenuItem>
+                <SeparatorMenuItem/>
+                <MenuItem text="退出" onAction="#exit"/>
+            </Menu>
+            <Menu mnemonicParsing="false" text="设置">
+                <Menu fx:id="viewStyle" text="界面">
+                    <graphic>
+                        <FontIcon iconLiteral="fth-grid"/>
+                    </graphic>
+                </Menu>
+                <MenuItem text="翻译" onAction="#openSetupTranslate"/>
+                <MenuItem text="代理" onAction="#openSetupProxy">
+                    <graphic>
+                        <FontIcon iconLiteral="fth-globe"/>
+                    </graphic>
+                </MenuItem>
+            </Menu>
+            <Menu mnemonicParsing="false" text="关于">
+                <graphic>
+                    <FontIcon iconLiteral="fth-info"/>
+                </graphic>
+            </Menu>
+        </MenuBar>
+        <StackPane fx:id="mainView" prefWidth="Infinity">
+            <VBox fx:id="translateView" visible="false">
+                <ToolBar>
+                    <Button fx:id="fileNameLabel" disable="true" text="fileName.pbo"/>
+                    <Spacer/>
+                    <!-- 翻译按钮 -->
+                    <Button fx:id="translate" text="翻译" onAction="#startTranslate">
+                        <graphic>
+                            <FontIcon iconLiteral="fth-play"/>
+                        </graphic>
+                    </Button>
+                    <!-- 打包按钮 -->
+                    <Button text="打包" onAction="#startPack"/>
+                </ToolBar>
+                <VBox prefHeight="${root.height}">
+                    <ProgressBar fx:id="translateProgress" styleClass="small" prefWidth="Infinity" progress="0" visible="false"/>
+                    <SplitPane dividerPositions="0.25" prefWidth="Infinity" VBox.vgrow="ALWAYS">
+                        <DirectoryTree fx:id="treeFileBox" maxWidth="420" minWidth="40"/>
+                        <StackPane GridPane.columnIndex="1" minWidth="40">
+                            <VBox fx:id="loadWordBox" alignment="CENTER" spacing="20">
+                                <Label text="正在查找待翻译文本"/>
+                                <ProgressBar fx:id="loadWordProgressBar" prefWidth="150"/>
+                            </VBox>
+                            <VBox fx:id="wordBox">
+                            </VBox>
+                        </StackPane>
+                    </SplitPane>
+                </VBox>
             </VBox>
-            <VBox fx:id="dragFileBox" alignment="CENTER" styleClass="box_class" visible="false">
-                <Label fx:id="dragFileLabel" alignment="CENTER" prefHeight="-Infinity" text="将文件拖放到此处"
-                       textAlignment="CENTER"/>
-            </VBox>
-            <VBox fx:id="loadFileBox" alignment="CENTER" styleClass="box_class" visible="false">
-                <Label fx:id="loadFileLabel"/>
-                <ProgressBar fx:id="loadFileProgressBar"/>
-            </VBox>
-            <TreeView fx:id="treeFileBox" styleClass="box_class" visible="false"/>
+            <StackPane fx:id="selectFileBox">
+                <VBox fx:id="openFileView" alignment="CENTER">
+                    <Button text="打开文件" onAction="#selectFile"/>
+                    <Label text="或将 pbo文件 拖到此处">
+                        <VBox.margin>
+                            <Insets top="10.0"/>
+                        </VBox.margin>
+                    </Label>
+                </VBox>
+                <VBox fx:id="dragFileView" alignment="CENTER" visible="false"
+                      style="-fx-background-color: -color-bg-default">
+                    <Label alignment="CENTER" prefHeight="-Infinity" text="将文件拖放到此处"
+                           textAlignment="CENTER"/>
+                </VBox>
+                <VBox fx:id="loadFileView" alignment="CENTER" spacing="20" visible="false"
+                      style="-fx-background-color: -color-bg-default">
+                    <Label text="正在读取文件"/>
+                    <ProgressBar prefWidth="200"/>
+                </VBox>
+            </StackPane>
         </StackPane>
-        <StackPane fx:id="wordBox" styleClass="box_class" GridPane.columnIndex="1" minWidth="210">
-            <VBox fx:id="wordMsgBox" alignment="CENTER" styleClass="box_class">
-                <Label fx:id="wordMsgLabel"/>
-                <ProgressBar fx:id="loadWordProgressBar" visible="false"/>
-            </VBox>
-        </StackPane>
-    </SplitPane>
-</VBox>
+        <TitledPane fx:id="titledPane" text="信息" expanded="false">
+            <TextArea fx:id="logArea" editable="false" minHeight="150">
+                <contextMenu>
+                    <ContextMenu>
+                        <items>
+                            <MenuItem text="全选" onAction="#selectAllLog"/>
+                            <MenuItem text="复制" onAction="#copyLog"/>
+                            <MenuItem text="清空" onAction="#clearLog"/>
+                        </items>
+                    </ContextMenu>
+                </contextMenu>
+            </TextArea>
+        </TitledPane>
+    </VBox>
+</StackPane>

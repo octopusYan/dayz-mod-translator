@@ -2,46 +2,35 @@
 
 # DayZ Mod Translator
 
+![JDK](https://img.shields.io/badge/JDK-21-%2300599C)
+[![JavaFX](https://img.shields.io/badge/JavaFX-21.0.4-%2300599C)](https://openjfx.io/)
+![platform](https://img.shields.io/badge/platform-Windows-blueviolet)
 <br>
-<div>
-    <img alt="JDK" src="https://img.shields.io/badge/JDK-17-%2300599C">
-    <img alt="platform" src="https://img.shields.io/badge/platform-Windows-blueviolet">
-</div>
-
-[//]: # (<div>)
-
-[//]: # (    <img alt="license" src="https://img.shields.io/github/license/octopusYan/dayz-mod-translator">)
-
-[//]: # (    <img alt="commit" src="https://img.shields.io/github/commit-activity/m/octopusYan/dayz-mod-translator?color=%23ff69b4">)
-
-[//]: # (</div>)
-
-[//]: # (<div>)
-
-[//]: # (    <img alt="stars" src="https://img.shields.io/github/stars/octopusYan/dayz-mod-translator?style=social">)
-
-[//]: # (    <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/octopusYan/dayz-mod-translator/total?style=social">)
-
-[//]: # (</div>)
+[![license](https://img.shields.io/github/license/octopusYan/dayz-mod-translator)](https://github.com/octopusYan/dayz-mod-translator)
+![commit](https://img.shields.io/github/commit-activity/m/octopusYan/dayz-mod-translator?color=%23ff69b4)
+<br>
+![stars](https://img.shields.io/github/stars/octopusYan/dayz-mod-translator?style=social)
+![GitHub all releases](https://img.shields.io/github/downloads/octopusYan/dayz-mod-translator/total?style=social)
 
 <br>
 
-使用 JavaFx 编写的 DayZ 游戏mod 汉化GUI工具
+使用JavaFx编写的DayZ/ArmA游戏模组汉化工具
 
 </div>
 
 ### 使用
 
 - 设置 -> 翻译，选择翻译接口，填写配置信息，点击确定
-- 点击左侧打开文件选择需要翻译的模组pbo文件
-- 待翻译文本获取完成后，点击右侧翻译按钮
+- 点击打开文件按钮选择需要翻译的模组pbo文件
+- 等待待可翻译文本获取完成，点击右侧翻译按钮
 - 翻译完成后，点击打包按钮，选择保存位置
 
-<details><summary>截图</summary>
+<details open>
+<summary>截图</summary>
 
-![Main window start](doc/img/screenshot01.png 'Main application window start')
-
-![Main window open file](doc/img/screenshot02.png 'Main window open file')
+![start](doc/img/screenshot01.png 'start')
+![open file](doc/img/screenshot02.png 'open file')
+![edit](doc/img/screenshot03.png 'edit')
 
 </details>
 
@@ -49,43 +38,50 @@
 
 #### 环境说明
 
-| 名称    | 描述                                                      |
-|-------|---------------------------------------------------------|
-| 系统环境  | windows11/10                                            |
-| JDK版本 | 17                                                      |
-| 构建工具  | Mavne                                                   |
-| 打包工具  | [JavaPackager](https://github.com/fvarrui/JavaPackager) |
+| 名称   | 描述                                                      |
+|------|---------------------------------------------------------|
+| 系统环境 | windows 10/11                                           |
+| JDK  | 21                                                      |
+| 构建工具 | Maven                                                   |
+| 打包工具 | [JavaPackager](https://github.com/fvarrui/JavaPackager) |
 
-#### 步骤
+#### 本地运行
 
-1. 环境配置
-    - 打开 [JavaFx](https://gluonhq.com/products/javafx/) 官网环境下载页面
-    - 在下方 Downloads 处
-        - `JavaFX version` 选择 `17.0.12[LTS]`
-        - `Operating System` 选择 `Windows`
-        - `Type` 选择 `jmods`
-    - 点击右侧绿色按钮下载解压
-    - 将解压文件夹内所有 `.jmod` 后缀名的文件复制到 `jdk环境目录` 的`jmods`文件夹中
-2. 下载源代码并使用 [IntelliJ IDEA](https://www.jetbrains.com/zh-cn/idea/download/?section=windows) 打开
+1. 克隆代码
    ```bash
-   git clone https://github.com/octopusYan/dayz-mod-translator.git
+   git clone https://github.com/octopusYan/dayz-mod-translator
    ```
-3. 打包
-    - 使用 `IntelliJ IDEA` Maven UI
-        - 点击右侧工具栏的`Maven`
-        - 展开 `DayzModTranslator\Lifecycle`
-        - 点击 package
-    - 使用 mvn 命令
-        ```bash
-        mvn package
-        ```
+2. 运行
+   ```bash
+   mvn clean javafx:run
+   ```
+
+#### 打包
+
+1. 克隆代码
+   ```bash
+   git clone https://github.com/octopusYan/dayz-mod-translator
+   ```
+2. 运行
+   ```bash
+   mvn clean package
+   ```
 
 ### 可能会用到
 
 吾爱论坛 / 谷歌翻译修复：[谷歌浏览器右键翻译失效了咋办，一键修复，才13KB](https://www.52pojie.cn/thread-1781877-1-1.html)
 
-## 致谢
+### 依赖/引用的项目
 
-### 开源库
+<figure>
 
-- [pboman3](https://github.com/winseros/pboman3)：打开、打包和解包 ArmA PBO 文件的工具。
+|                                                                             |                          |
+|-----------------------------------------------------------------------------|--------------------------|
+| [PBO Manager](https://github.com/winseros/pboman3)                          | 打开、打包和解包 ArmA PBO 文件的工具。 |
+| [JavaFX](https://openjfx.io/)                                               | Java 桌面开发                |
+| [AtlantaFX](https://mkpaz.github.io/atlantafx/)                             | JavaFX CSS 主题集合          |
+| [JavaPackager](https://github.com/fvarrui/JavaPackager)                     | 打包插件                     |
+| [Apache Commons](https://commons.apache.org/proper/commons-exec/index.html) | 工具包                      |
+| [SLF4J](https://slf4j.org/)                                                 | 日志工具                     |
+
+</figure>
