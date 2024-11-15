@@ -52,10 +52,32 @@ public class ProcessesUtil {
     public static ProcessesUtil init(String workingDirectory) {
         return init(new File(workingDirectory));
     }
+
     public static ProcessesUtil init(File workingDirectory) {
         ProcessesUtil util = new ProcessesUtil(workingDirectory);
         set.add(util);
         return util;
+    }
+
+    /**
+     * 转命令
+     *
+     * @param command 命令模板
+     * @param params  参数
+     * @return 命令
+     */
+    public static String format(String command, Object... params) {
+
+        int i = 0;
+        while (command.contains("{}") && params != null) {
+            String param = String.valueOf(params[i++]);
+
+            if (param.contains(" "))
+                param = STR."\"\{param}\"";
+
+            command = command.replaceFirst("\\{}", param.replace("\\", "\\\\"));
+        }
+        return command;
     }
 
     public boolean exec(String command) {

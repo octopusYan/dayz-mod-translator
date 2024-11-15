@@ -1,10 +1,10 @@
 package cn.octopusyan.dmt.view;
 
+import cn.octopusyan.dmt.common.config.Context;
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +23,6 @@ public class ConsoleLog {
     private static Logger markerLog;
     private static TextArea logArea;
     private final String tag;
-    @Setter
-    private static boolean showDebug = false;
 
     public static void init(TextArea logArea) {
         ConsoleLog.logArea = logArea;
@@ -56,7 +54,7 @@ public class ConsoleLog {
     }
 
     public void debug(String message, Object... param) {
-        if (!showDebug) return;
+        if (!Context.isDebugMode()) return;
         printLog(tag, Level.DEBUG, message, param);
     }
 
