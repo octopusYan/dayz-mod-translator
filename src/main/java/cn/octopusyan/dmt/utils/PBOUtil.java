@@ -32,9 +32,9 @@ public class PBOUtil {
 
     private static final ProcessesUtil processesUtil = ProcessesUtil.init(Constants.BIN_DIR_PATH);
 
-    private static final String UNPACK_COMMAND = STR."\{Constants.PBOC_FILE} unpack -o \{Constants.TMP_DIR_PATH} {}";
-    private static final String PACK_COMMAND = STR."\{Constants.PBOC_FILE} pack -o {} {}";
-    private static final String CFG_COMMAND = STR."\{Constants.CFG_CONVERT_FILE} {} -dst {} {}";
+    private static final String UNPACK_COMMAND = STR."\"\{Constants.PBOC_FILE}\" unpack -o \"\{Constants.TMP_DIR_PATH}\" {}";
+    private static final String PACK_COMMAND = STR."\"\{Constants.PBOC_FILE}\" pack -o {} {}";
+    private static final String CFG_COMMAND = STR."\"\{Constants.CFG_CONVERT_FILE}\" {} -dst {} {}";
 
     private static final String FILE_NAME_STRING_TABLE = "stringtable.csv";
     private static final String FILE_NAME_CONFIG_BIN = "config.bin";
