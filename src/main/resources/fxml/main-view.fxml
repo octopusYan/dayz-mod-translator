@@ -35,6 +35,11 @@
                 </MenuItem>
             </Menu>
             <Menu mnemonicParsing="false" text="帮助">
+                <MenuItem text="帮助" onAction="#openHelp">
+                    <graphic>
+                        <FontIcon iconLiteral="fth-help-circle"/>
+                    </graphic>
+                </MenuItem>
                 <MenuItem text="关于" onAction="#openAbout">
                     <graphic>
                         <FontIcon iconLiteral="fth-info"/>

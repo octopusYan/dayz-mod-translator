@@ -147,54 +147,6 @@ public class MainController extends BaseController<MainViewModel> {
     }
 
     /**
-     * 设置文件拖拽效果
-     */
-    private void setDragAction(Pane fileBox) {
-
-        // 进入
-        fileBox.setOnDragEntered(dragEvent -> {
-            var dragboard = dragEvent.getDragboard();
-            if (dragboard.hasFiles() && isPboFile(dragboard.getFiles().getFirst())) {
-                selectFileBox.setVisible(true);
-                dragFileView.setVisible(true);
-            }
-        });
-
-        //离开
-        fileBox.setOnDragExited(_ -> {
-            selectFileBox.setVisible(false);
-            dragFileView.setVisible(false);
-        });
-
-        //
-        fileBox.setOnDragOver(dragEvent -> {
-            var dragboard = dragEvent.getDragboard();
-            if (dragEvent.getGestureSource() != fileBox && dragboard.hasFiles()) {
-                /* allow for both copying and moving, whatever user chooses */
-                dragEvent.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-            }
-            dragEvent.consume();
-        });
-
-        // 松手
-        fileBox.setOnDragDropped(dragEvent -> {
-            dragFileView.setVisible(false);
-
-            var db = dragEvent.getDragboard();
-            boolean success = false;
-            var file = db.getFiles().getFirst();
-            if (db.hasFiles() && isPboFile(file)) {
-                selectFile(file);
-                success = true;
-            }
-            /* 让源知道字符串是否已成功传输和使用 */
-            dragEvent.setDropCompleted(success);
-
-            dragEvent.consume();
-        });
-    }
-
-    /**
      * 打开文件选择器
      */
     public void selectFile() {
@@ -216,10 +168,37 @@ public class MainController extends BaseController<MainViewModel> {
     }
 
     /**
+     * 帮助
+     */
+    public void openHelp() {
+        Context.openUrl("https://www.52pojie.cn/thread-1891962-1-1.html");
+    }
+
+    /**
      * 关于
      */
     public void openAbout() {
         ViewUtil.openDecorated("关于", "about-view");
+    }
+
+    public void startTranslate() {
+        viewModel.startTranslate();
+    }
+
+    public void startPack() {
+        viewModel.pack();
+    }
+
+    public void selectAllLog() {
+        logArea.selectAll();
+    }
+
+    public void copyLog() {
+        logArea.copy();
+    }
+
+    public void clearLog() {
+        logArea.clear();
     }
 
     /**
@@ -289,27 +268,55 @@ public class MainController extends BaseController<MainViewModel> {
         }
     }
 
-    public void startTranslate() {
-        viewModel.startTranslate();
-    }
+    // ======================================{ private }========================================
 
-    public void startPack() {
-        viewModel.pack();
-    }
+    /**
+     * 设置文件拖拽效果
+     */
+    private void setDragAction(Pane fileBox) {
 
-    public void selectAllLog() {
-        logArea.selectAll();
-    }
+        // 进入
+        fileBox.setOnDragEntered(dragEvent -> {
+            var dragboard = dragEvent.getDragboard();
+            if (dragboard.hasFiles() && isPboFile(dragboard.getFiles().getFirst())) {
+                selectFileBox.setVisible(true);
+                dragFileView.setVisible(true);
+            }
+        });
 
-    public void copyLog() {
-        logArea.copy();
-    }
+        //离开
+        fileBox.setOnDragExited(_ -> {
+            selectFileBox.setVisible(false);
+            dragFileView.setVisible(false);
+        });
 
-    public void clearLog() {
-        logArea.clear();
-    }
+        //
+        fileBox.setOnDragOver(dragEvent -> {
+            var dragboard = dragEvent.getDragboard();
+            if (dragEvent.getGestureSource() != fileBox && dragboard.hasFiles()) {
+                /* allow for both copying and moving, whatever user chooses */
+                dragEvent.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            }
+            dragEvent.consume();
+        });
 
-    // ======================================{  }========================================
+        // 松手
+        fileBox.setOnDragDropped(dragEvent -> {
+            dragFileView.setVisible(false);
+
+            var db = dragEvent.getDragboard();
+            boolean success = false;
+            var file = db.getFiles().getFirst();
+            if (db.hasFiles() && isPboFile(file)) {
+                selectFile(file);
+                success = true;
+            }
+            /* 让源知道字符串是否已成功传输和使用 */
+            dragEvent.setDropCompleted(success);
+
+            dragEvent.consume();
+        });
+    }
 
     /**
      * 打开文件

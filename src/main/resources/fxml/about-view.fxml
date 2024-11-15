@@ -6,7 +6,7 @@
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="cn.octopusyan.dmt.controller.help.AboutController"
       stylesheets="@../css/about-view.css"
-      fx:id="root" prefHeight="400.0" prefWidth="600.0">
+      fx:id="root" prefHeight="350.0" prefWidth="500.0">
 
     <VBox id="titleBox" alignment="CENTER_LEFT" prefWidth="${root.width}" prefHeight="100">
         <Label fx:id="title" text="title"/>
@@ -20,6 +20,10 @@
             <Label text="下载地址"/>
             <Hyperlink text="Gitee" onAction="#openGitee"/>
             <Hyperlink text="Github" onAction="#openGithub"/>
+        </HBox>
+        <HBox spacing="20">
+            <Label text="发布地址"/>
+            <Hyperlink text="52pojie.cn" onAction="#openForum"/>
         </HBox>
     </VBox>
 </VBox>

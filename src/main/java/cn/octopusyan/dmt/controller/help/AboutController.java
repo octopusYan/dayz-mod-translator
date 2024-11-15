@@ -37,10 +37,14 @@ public class AboutController extends BaseController<AboutViewModel> {
     }
 
     public void openGitee() {
-        Context.openUrl("https://gitee.com/octopus_yan/dayz-mod-translator");
+        Context.openUrl("https://gitee.com/octopus_yan/dayz-mod-translator/releases");
     }
 
     public void openGithub() {
-        Context.openUrl("https://github.com/octopusYan/dayz-mod-translator");
+        Context.openUrl("https://github.com/octopusYan/dayz-mod-translator/releases");
+    }
+
+    public void openForum() {
+        Context.openUrl("https://www.52pojie.cn/thread-1891962-1-1.html");
     }
 }
