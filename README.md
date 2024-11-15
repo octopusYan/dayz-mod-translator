@@ -53,7 +53,7 @@
    ```
 2. 运行
    ```bash
-   mvn clean javafx:run
+   mvn clean javafx:run -Pdev
    ```
 
 #### 打包
@@ -64,7 +64,7 @@
    ```
 2. 运行
    ```bash
-   mvn clean package
+   mvn clean package -Pbuild
    ```
 
 ### 可能会用到

@@ -6,7 +6,7 @@
 
     <groupId>cn.octopusyan</groupId>
     <artifactId>dmt</artifactId>
-    <version>0.0.2</version>
+    <version>0.1.2</version>
     <name>dmt</name>
 
     <organization>
@@ -172,14 +172,41 @@
         </pluginRepository>
     </pluginRepositories>
 
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <debug.option>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005</debug.option>
+            </properties>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <profile>
+            <id>build</id>
+            <properties>
+                <debug.option/>
+            </properties>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <filtering>true</filtering>
+                        <excludes>
+                            <exclude>bin/</exclude>
+                        </excludes>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+    </profiles>
 
+    <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -233,7 +260,7 @@
                         <configuration>
                             <options>
                                 <option>--enable-preview</option>
-<!--                                <option>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005</option>-->
+                                <option>${debug.option}</option>
                             </options>
                         </configuration>
                     </execution>

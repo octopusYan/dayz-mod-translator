@@ -17,6 +17,7 @@ module cn.octopusyan.dmt {
     requires java.prefs;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.feather;
+    requires java.management;
 
     exports cn.octopusyan.dmt;
     exports cn.octopusyan.dmt.model to com.fasterxml.jackson.databind;

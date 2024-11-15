@@ -1,12 +1,15 @@
 package cn.octopusyan.dmt.utils;
 
 import cn.octopusyan.dmt.common.config.Constants;
+import cn.octopusyan.dmt.common.config.Context;
 import cn.octopusyan.dmt.common.util.ProcessesUtil;
 import cn.octopusyan.dmt.model.WordItem;
 import cn.octopusyan.dmt.view.ConsoleLog;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
  * @author octopus_yan
  */
 public class PBOUtil {
+    private static final Logger log = LoggerFactory.getLogger(PBOUtil.class);
     public static final ConsoleLog consoleLog = ConsoleLog.getInstance(PBOUtil.class);
 
     private static final ProcessesUtil processesUtil = ProcessesUtil.init(Constants.BIN_DIR_PATH);
@@ -42,14 +46,20 @@ public class PBOUtil {
 
 
     public static void init() {
-
-        String srcFilePath = Objects.requireNonNull(PBOUtil.class.getResource("/bin")).getPath();
         try {
             File destDir = new File(Constants.BIN_DIR_PATH);
+
+            if (destDir.exists()) return;
+
+            if (!Context.isDebugMode())
+                throw new RuntimeException("Util 初始化失败");
+
+            String srcFilePath = Resources.getResource("bin").getPath();
             FileUtils.forceMkdir(destDir);
             FileUtils.copyDirectory(new File(srcFilePath), destDir);
+
         } catch (IOException e) {
-            consoleLog.error("Util 初始化失败", e);
+            log.error("Util 初始化失败", e);
         }
     }
 

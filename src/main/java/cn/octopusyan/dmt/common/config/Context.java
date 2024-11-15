@@ -16,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,9 +41,13 @@ public class Context {
     @Getter
     private static final Map<String, BaseController<?>> controllers = new HashMap<>();
 
-
     private Context() {
         throw new IllegalStateException("Utility class");
+    }
+
+    public static boolean isDebugMode() {
+        RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
+        return runtimeMXBean.getInputArguments().toString().contains("-agentlib:jdwp");
     }
 
     // 获取控制工厂
