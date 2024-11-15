@@ -1,0 +1,14 @@
+#root #titleBox {
+    -fx-padding: 0 0 0 120;
+    -fx-background-color: -color-neutral-muted;
+}
+
+#root #titleBox #title {
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 25;
+}
+
+#root #infoBox {
+    -fx-spacing: 25;
+    -fx-padding: 50 0 0 120;
+}

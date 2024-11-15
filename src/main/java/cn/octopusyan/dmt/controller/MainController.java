@@ -215,8 +215,11 @@ public class MainController extends BaseController<MainViewModel> {
         ViewUtil.openDecorated("翻译设置", "setup/translate-view");
     }
 
-    public void setFileName(String name) {
-        fileNameLabel.setText("PBO文件：" + name);
+    /**
+     * 关于
+     */
+    public void openAbout() {
+        ViewUtil.openDecorated("关于", "about-view");
     }
 
     /**

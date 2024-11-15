@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="cn.octopusyan.dmt.controller.help.AboutController"
+      stylesheets="@../css/about-view.css"
+      fx:id="root" prefHeight="400.0" prefWidth="600.0">
+
+    <VBox id="titleBox" alignment="CENTER_LEFT" prefWidth="${root.width}" prefHeight="100">
+        <Label fx:id="title" text="title"/>
+    </VBox>
+
+    <VBox id="infoBox">
+        <Label fx:id="infoTitle" text="title"/>
+        <Label fx:id="version" text="版本：vx.x.x(x64)"/>
+        <Label text="Copyright (C) 2024 octopus_yan"/>
+        <HBox spacing="20">
+            <Label text="下载地址"/>
+            <Hyperlink text="Gitee" onAction="#openGitee"/>
+            <Hyperlink text="Github" onAction="#openGithub"/>
+        </HBox>
+    </VBox>
+</VBox>

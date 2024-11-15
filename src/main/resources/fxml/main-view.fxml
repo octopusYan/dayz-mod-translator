@@ -34,10 +34,12 @@
                     </graphic>
                 </MenuItem>
             </Menu>
-            <Menu mnemonicParsing="false" text="关于">
-                <graphic>
-                    <FontIcon iconLiteral="fth-info"/>
-                </graphic>
+            <Menu mnemonicParsing="false" text="帮助">
+                <MenuItem text="关于" onAction="#openAbout">
+                    <graphic>
+                        <FontIcon iconLiteral="fth-info"/>
+                    </graphic>
+                </MenuItem>
             </Menu>
         </MenuBar>
         <StackPane fx:id="mainView" prefWidth="Infinity">
