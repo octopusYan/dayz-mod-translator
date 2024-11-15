@@ -22,7 +22,7 @@ public abstract class DefaultTaskListener implements Listener {
      * 加载弹窗
      */
     @Getter
-    final ProgressBuilder progress = AlertUtil.progress();
+    final ProgressBuilder progress = AlertUtil.getInstance().progress();
 
     /**
      * 是否展示加载弹窗

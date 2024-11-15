@@ -5,7 +5,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import org.kordamp.ikonli.javafx.*?>
 <StackPane xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1"
            fx:id="root" prefHeight="800.0" prefWidth="1000.0"
            fx:controller="cn.octopusyan.dmt.controller.MainController">
@@ -55,7 +55,7 @@
                     <Button text="打包" onAction="#startPack"/>
                 </ToolBar>
                 <VBox prefHeight="${root.height}">
-                    <ProgressBar fx:id="translateProgress" styleClass="small" prefWidth="Infinity" progress="0" visible="false"/>
+                    <ProgressBar fx:id="translateProgress" prefWidth="Infinity" progress="0" visible="false"/>
                     <SplitPane dividerPositions="0.25" prefWidth="Infinity" VBox.vgrow="ALWAYS">
                         <DirectoryTree fx:id="treeFileBox" maxWidth="420" minWidth="40"/>
                         <StackPane GridPane.columnIndex="1" minWidth="40">

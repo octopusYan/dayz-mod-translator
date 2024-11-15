@@ -51,7 +51,8 @@ public abstract class BaseBuilder<T extends BaseBuilder<T, ?>, D extends Dialog<
     }
 
     public void close() {
-        if (dialog.isShowing())
-            dialog.close();
+        Platform.runLater(() -> {
+            if (dialog.isShowing()) dialog.close();
+        });
     }
 }

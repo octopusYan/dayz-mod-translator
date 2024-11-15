@@ -1,4 +1,4 @@
-package cn.octopusyan.dmt.controller;
+package cn.octopusyan.dmt.controller.setup;
 
 import cn.octopusyan.dmt.common.base.BaseController;
 import cn.octopusyan.dmt.common.manager.ConfigManager;
@@ -81,7 +81,8 @@ public class TranslateController extends BaseController<TranslateViewModel> {
         ConfigManager.translateQps(source, qps);
         if (source.needApiKey()) {
             if (StringUtils.isBlank(apikey) || StringUtils.isBlank(appid)) {
-                AlertUtil.error("认证信息不能为空");
+                AlertUtil.getInstance(getWindow()).error("认证信息不能为空").show();
+                return;
             }
 
             ConfigManager.translateApikey(source, apikey);

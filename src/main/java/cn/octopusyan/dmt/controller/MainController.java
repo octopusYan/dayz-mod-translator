@@ -8,6 +8,7 @@ import cn.octopusyan.dmt.common.config.Context;
 import cn.octopusyan.dmt.common.manager.ConfigManager;
 import cn.octopusyan.dmt.common.util.ClipUtil;
 import cn.octopusyan.dmt.common.util.FxmlUtil;
+import cn.octopusyan.dmt.common.util.ViewUtil;
 import cn.octopusyan.dmt.controller.component.WordEditController;
 import cn.octopusyan.dmt.model.WordItem;
 import cn.octopusyan.dmt.task.TranslateTask;
@@ -95,12 +96,13 @@ public class MainController extends BaseController<MainViewModel> {
 
     @Override
     public void initData() {
+        // 信息
+        ConsoleLog.init(logArea);
         // 界面样式
         List<MenuItem> list = ConfigManager.THEME_LIST.stream().map(this::createViewStyleItem).toList();
         viewStyle.getItems().addAll(list);
 
-        // 信息
-        ConsoleLog.init(logArea);
+        fileNameLabel.textProperty().bind(viewModel.fileNameProperty());
     }
 
     @Override
@@ -202,23 +204,15 @@ public class MainController extends BaseController<MainViewModel> {
     /**
      * 打开代理设置
      */
-    public void openSetupProxy() throws IOException {
-        FXMLLoader load = FxmlUtil.load("setup/proxy-view");
-        AlertUtil.builder(false)
-                .title("网络代理设置")
-                .content((Pane) load.load())
-                .show();
+    public void openSetupProxy() {
+        ViewUtil.openDecorated("网络代理设置", "setup/proxy-view");
     }
 
     /**
      * 打开翻译设置
      */
-    public void openSetupTranslate() throws IOException {
-        FXMLLoader load = FxmlUtil.load("setup/translate-view");
-        AlertUtil.builder(false)
-                .title("翻译设置")
-                .content((Pane) load.load())
-                .show();
+    public void openSetupTranslate() {
+        ViewUtil.openDecorated("翻译设置", "setup/translate-view");
     }
 
     public void setFileName(String name) {
@@ -288,7 +282,7 @@ public class MainController extends BaseController<MainViewModel> {
             FileUtils.copyFile(packFile, file);
         } catch (IOException e) {
             consoleLog.error("保存文件失败！", e);
-            Platform.runLater(() -> AlertUtil.exception(e).content("保存文件失败！").show());
+            Platform.runLater(() -> AlertUtil.getInstance(getWindow()).exception(e).content("保存文件失败！").show());
         }
     }
 

@@ -8,7 +8,7 @@ import lombok.Setter;
  * @author octopus_yan
  */
 @Setter
-public abstract class BaseViewModel<VM extends BaseViewModel<VM, T>, T extends BaseController<VM>> {
+public abstract class BaseViewModel<T extends BaseController> {
 
     protected T controller;
 

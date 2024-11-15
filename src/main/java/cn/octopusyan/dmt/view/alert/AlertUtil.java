@@ -1,5 +1,6 @@
 package cn.octopusyan.dmt.view.alert;
 
+import cn.octopusyan.dmt.Application;
 import cn.octopusyan.dmt.view.alert.builder.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -12,44 +13,56 @@ import javafx.stage.Window;
  * @author octopus_yan@foxmail.com
  */
 public class AlertUtil {
-    private static Window mOwner;
+    private final Window mOwner;
+    private static volatile AlertUtil alertUtil;
 
-    public static void initOwner(Stage stage) {
-        AlertUtil.mOwner = stage;
+    private AlertUtil(Window mOwner) {
+        this.mOwner = mOwner;
     }
 
-    public static DefaultBuilder builder() {
+    public static synchronized AlertUtil getInstance() {
+        if (alertUtil == null) {
+            alertUtil = new AlertUtil(Application.getPrimaryStage());
+        }
+        return alertUtil;
+    }
+
+    public static AlertUtil getInstance(Stage stage) {
+        return new AlertUtil(stage);
+    }
+
+    public DefaultBuilder builder() {
         return new DefaultBuilder(mOwner, true);
     }
 
-    public static DefaultBuilder builder(boolean transparent) {
+    public DefaultBuilder builder(boolean transparent) {
         return new DefaultBuilder(mOwner, transparent);
     }
 
-    public static AlertBuilder info(String content) {
+    public AlertBuilder info(String content) {
         return info().content(content).header(null);
     }
 
-    public static AlertBuilder info() {
+    public AlertBuilder info() {
         return alert(Alert.AlertType.INFORMATION);
     }
 
-    public static AlertBuilder error(String message) {
+    public AlertBuilder error(String message) {
         return alert(Alert.AlertType.ERROR).header(null).content(message);
     }
 
-    public static AlertBuilder warning() {
+    public AlertBuilder warning() {
         return alert(Alert.AlertType.WARNING);
     }
 
-    public static AlertBuilder exception(Exception ex) {
+    public AlertBuilder exception(Exception ex) {
         return alert(Alert.AlertType.ERROR).exception(ex);
     }
 
     /**
      * 确认对话框
      */
-    public static AlertBuilder confirm() {
+    public AlertBuilder confirm() {
         return alert(Alert.AlertType.CONFIRMATION);
     }
 
@@ -58,32 +71,32 @@ public class AlertUtil {
      *
      * @param buttons <code>"Cancel"</code> OR <code>"取消"</code> 为取消按钮
      */
-    public static AlertBuilder confirm(String... buttons) {
+    public AlertBuilder confirm(String... buttons) {
         return confirm().buttons(buttons);
     }
 
-    public static AlertBuilder confirm(ButtonType... buttons) {
+    public AlertBuilder confirm(ButtonType... buttons) {
         return confirm().buttons(buttons);
     }
 
-    public static AlertBuilder alert(Alert.AlertType type) {
+    public AlertBuilder alert(Alert.AlertType type) {
         return new AlertBuilder(mOwner, type);
     }
 
-    public static TextInputBuilder input(String content) {
+    public TextInputBuilder input(String content) {
         return new TextInputBuilder(mOwner);
     }
 
-    public static TextInputBuilder input(String content, String defaultResult) {
+    public TextInputBuilder input(String content, String defaultResult) {
         return new TextInputBuilder(mOwner, defaultResult).content(content);
     }
 
     @SafeVarargs
-    public static <T> ChoiceBuilder<T> choices(String hintText, T... choices) {
+    public final <T> ChoiceBuilder<T> choices(String hintText, T... choices) {
         return new ChoiceBuilder<>(mOwner, choices).content(hintText);
     }
 
-    public static ProgressBuilder progress() {
+    public ProgressBuilder progress() {
         return new ProgressBuilder(mOwner);
     }
 

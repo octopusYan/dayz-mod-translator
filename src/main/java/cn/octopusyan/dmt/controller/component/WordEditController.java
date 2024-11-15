@@ -55,7 +55,7 @@ public class WordEditController extends BaseController<WordEditViewModel> {
                 String result = TranslateFactoryImpl.getInstance().translate(ConfigManager.translateApi(), original.getText());
                 Platform.runLater(() -> chinese.setText(result));
             } catch (Exception e) {
-                Platform.runLater(() -> AlertUtil.exception(e).show());
+                Platform.runLater(() -> AlertUtil.getInstance(getWindow()).exception(e).show());
             }
             Platform.runLater(() -> progress.setVisible(false));
         });

@@ -71,9 +71,6 @@ public class Application extends javafx.application.Application {
 
         Context.setApplication(this);
 
-        // 初始化弹窗工具
-        AlertUtil.initOwner(primaryStage);
-
         // 全局异常处理
         Thread.setDefaultUncaughtExceptionHandler(this::showErrorDialog);
         Thread.currentThread().setUncaughtExceptionHandler(this::showErrorDialog);
@@ -86,13 +83,11 @@ public class Application extends javafx.application.Application {
         Scene scene = Context.initScene();
         primaryStage.setScene(scene);
         primaryStage.show();
-
-
     }
 
     private void showErrorDialog(Thread t, Throwable e) {
         logger.error("未知异常", e);
-        Platform.runLater(() -> AlertUtil.exception(new Exception(e)).show());
+        Platform.runLater(() -> AlertUtil.getInstance(primaryStage).exception(new Exception(e)).show());
     }
 
     @Override

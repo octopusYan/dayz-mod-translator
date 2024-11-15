@@ -224,6 +224,11 @@ public class ConfigManager {
         getProxyInfo().setPort(port);
     }
 
+    /**
+     * 端口检查
+     *
+     * @param consumer 检查结果，信息
+     */
     public static void checkProxy(BiConsumer<Boolean, String> consumer) {
         if (ProxySetup.SYSTEM.equals(proxySetup())) {
             consumer.accept(true, "");

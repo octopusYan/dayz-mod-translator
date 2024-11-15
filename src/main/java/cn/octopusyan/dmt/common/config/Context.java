@@ -61,17 +61,6 @@ public class Context {
     }
 
     /**
-     * 有此类所在路径决定相对路径
-     *
-     * @param path 资源文件相对路径
-     * @return 资源文件路径
-     */
-    // 加载资源文件
-    public static URL load(String path) {
-        return Context.class.getResource(path);
-    }
-
-    /**
      * 初始化场景
      *
      * @return Scene

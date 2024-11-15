@@ -1,4 +1,4 @@
-package cn.octopusyan.dmt.controller;
+package cn.octopusyan.dmt.controller.setup;
 
 import cn.octopusyan.dmt.common.base.BaseController;
 import cn.octopusyan.dmt.common.enums.ProxySetup;

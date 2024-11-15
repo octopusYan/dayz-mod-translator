@@ -2,7 +2,7 @@ package cn.octopusyan.dmt.viewModel;
 
 import cn.octopusyan.dmt.common.base.BaseViewModel;
 import cn.octopusyan.dmt.common.manager.ConfigManager;
-import cn.octopusyan.dmt.controller.TranslateController;
+import cn.octopusyan.dmt.controller.setup.TranslateController;
 import cn.octopusyan.dmt.translate.TranslateApi;
 import javafx.beans.property.*;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.Getter;
  * @author octopus_yan
  */
 @Getter
-public class TranslateViewModel extends BaseViewModel<TranslateViewModel, TranslateController> {
+public class TranslateViewModel extends BaseViewModel<TranslateController> {
 
     private final ObjectProperty<TranslateApi> source = new SimpleObjectProperty<>(ConfigManager.translateApi()) {
         {

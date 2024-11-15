@@ -24,5 +24,7 @@ module cn.octopusyan.dmt {
     opens cn.octopusyan.dmt.common.base to javafx.fxml;
     opens cn.octopusyan.dmt.controller to javafx.fxml;
     opens cn.octopusyan.dmt.controller.component to javafx.fxml;
+    opens cn.octopusyan.dmt.controller.setup to javafx.fxml;
+    opens cn.octopusyan.dmt.controller.help to javafx.fxml;
     opens cn.octopusyan.dmt.view.filemanager to javafx.fxml;
 }

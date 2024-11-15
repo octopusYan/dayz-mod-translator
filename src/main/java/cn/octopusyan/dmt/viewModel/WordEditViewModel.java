@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class WordEditViewModel extends BaseViewModel<WordEditViewModel, WordEditController> {
+public class WordEditViewModel extends BaseViewModel<WordEditController> {
     private WordItem data;
 
     /**

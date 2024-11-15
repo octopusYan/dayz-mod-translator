@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +28,6 @@ import java.util.ResourceBundle;
  */
 public abstract class BaseController<VM extends BaseViewModel> implements Initializable {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Getter
     protected final VM viewModel;
 
     public BaseController() {
@@ -97,7 +95,7 @@ public abstract class BaseController<VM extends BaseViewModel> implements Initia
         return "";
     }
 
-    protected Stage getWindow() {
+    public Stage getWindow() {
         try {
             return (Stage) getRootPanel().getScene().getWindow();
         } catch (Throwable _) {

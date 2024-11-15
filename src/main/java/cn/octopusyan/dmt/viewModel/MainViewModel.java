@@ -1,5 +1,6 @@
 package cn.octopusyan.dmt.viewModel;
 
+import atlantafx.base.theme.Styles;
 import cn.octopusyan.dmt.common.base.BaseViewModel;
 import cn.octopusyan.dmt.controller.MainController;
 import cn.octopusyan.dmt.model.WordItem;
@@ -11,6 +12,8 @@ import cn.octopusyan.dmt.translate.DelayWord;
 import cn.octopusyan.dmt.translate.TranslateUtil;
 import cn.octopusyan.dmt.view.ConsoleLog;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.concurrent.Worker;
 import javafx.scene.control.ProgressIndicator;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +31,7 @@ import java.util.regex.Pattern;
  *
  * @author octopus_yan
  */
-public class MainViewModel extends BaseViewModel<MainViewModel, MainController> {
+public class MainViewModel extends BaseViewModel<MainController> {
     private static final ConsoleLog consoleLog = ConsoleLog.getInstance(MainViewModel.class);
     /**
      * 解包任务
@@ -38,9 +41,7 @@ public class MainViewModel extends BaseViewModel<MainViewModel, MainController> 
      * 翻译任务
      */
     private TranslateTask translateTask;
-
     private DelayQueue<DelayWord> delayQueue;
-
     private String unpackPath;
     private int total;
 
@@ -48,13 +49,19 @@ public class MainViewModel extends BaseViewModel<MainViewModel, MainController> 
     FontIcon pauseIcon = new FontIcon(Feather.PAUSE);
     private List<WordItem> wordItems;
 
+    private final StringProperty fileName = new SimpleStringProperty();
+
+    public StringProperty fileNameProperty() {
+        return fileName;
+    }
+
     /**
      * 加载PBO文件
      */
     public void selectFile(File pboFile) {
         if (pboFile == null) return;
 
-        controller.setFileName(pboFile.getAbsolutePath());
+        fileName.setValue(pboFile.getAbsolutePath());
 
         unpackTask = new UnpackTask(pboFile);
     }
@@ -185,6 +192,7 @@ public class MainViewModel extends BaseViewModel<MainViewModel, MainController> 
     private void resetProgress() {
         translateTask = null;
         controller.translate.setGraphic(startIcon);
+        Styles.toggleStyleClass(controller.translateProgress, Styles.SMALL);
         controller.translateProgress.progressProperty().unbind();
         controller.translateProgress.setProgress(0);
         controller.translateProgress.setVisible(false);
