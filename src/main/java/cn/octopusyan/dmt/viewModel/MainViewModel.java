@@ -14,6 +14,7 @@ import cn.octopusyan.dmt.view.ConsoleLog;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.scene.control.ProgressIndicator;
 import org.apache.commons.lang3.StringUtils;
@@ -103,7 +104,7 @@ public class MainViewModel extends BaseViewModel<MainController> {
      * 开始翻译
      */
     public void startTranslate() {
-        if(wordItems.isEmpty()) return;
+        if (wordItems.isEmpty()) return;
 
         if (translateTask == null) {
             List<WordItem> words = wordItems.stream().filter(item -> StringUtils.isEmpty(item.getChinese())).toList();
@@ -135,7 +136,7 @@ public class MainViewModel extends BaseViewModel<MainController> {
      * 打包
      */
     public void pack() {
-        if(wordItems.isEmpty()) return;
+        if (wordItems.isEmpty()) return;
 
         PackTask packTask = new PackTask(wordItems, unpackPath);
         packTask.onListen(new PackTask.PackListener() {
@@ -192,7 +193,10 @@ public class MainViewModel extends BaseViewModel<MainController> {
     private void resetProgress() {
         translateTask = null;
         controller.translate.setGraphic(startIcon);
-        Styles.toggleStyleClass(controller.translateProgress, Styles.SMALL);
+        ObservableList<String> styleClass = controller.translateProgress.getStyleClass();
+        if (!styleClass.contains(Styles.SMALL)) {
+            Styles.toggleStyleClass(controller.translateProgress, Styles.SMALL);
+        }
         controller.translateProgress.progressProperty().unbind();
         controller.translateProgress.setProgress(0);
         controller.translateProgress.setVisible(false);
