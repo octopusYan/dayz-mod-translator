@@ -307,11 +307,14 @@ public class PBOUtil {
             if (StringUtils.isNoneEmpty(line) && matcher.matches()) {
                 // 原文
                 String original = matcher.group(1);
-                // 开始下标
-                Integer startIndex = line.indexOf(original);
-                // 添加单词
-                if (original.length() > 1) {
-                    wordItems.add(new WordItem(file, lines.get(), startIndex, original, ""));
+
+                if (!original.startsWith("#")) {
+                    // 开始下标
+                    Integer startIndex = line.indexOf(original);
+                    // 添加单词
+                    if (original.length() > 1) {
+                        wordItems.add(new WordItem(file, lines.get(), startIndex, original, ""));
+                    }
                 }
             }
 
