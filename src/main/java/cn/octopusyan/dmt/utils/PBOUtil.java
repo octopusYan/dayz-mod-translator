@@ -384,7 +384,7 @@ public class PBOUtil {
             Matcher matcher = CPP_PATTERN.matcher(line);
 
             // 不匹配 或 是变量 则跳过
-            if (!matcher.matches() || line.contains("$"))
+            if (!matcher.matches() || line.contains("$") || line.contains("#"))
                 continue;
 
             String name = matcher.group(1);
