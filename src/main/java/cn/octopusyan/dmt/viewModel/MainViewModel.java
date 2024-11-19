@@ -25,7 +25,6 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Pattern;
 
 /**
  * 主界面
@@ -200,15 +199,5 @@ public class MainViewModel extends BaseViewModel<MainController> {
         controller.translateProgress.progressProperty().unbind();
         controller.translateProgress.setProgress(0);
         controller.translateProgress.setVisible(false);
-    }
-
-    /**
-     * 给定字符串是否含有中文
-     *
-     * @param str 需要判断的字符串
-     * @return 是否含有中文
-     */
-    private boolean containsChinese(String str) {
-        return Pattern.compile("[\u4e00-\u9fa5]").matcher(str).find();
     }
 }

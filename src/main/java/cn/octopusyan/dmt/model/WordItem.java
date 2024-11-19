@@ -34,6 +34,8 @@ public class WordItem {
      */
     private StringProperty chineseProperty = new SimpleStringProperty();
 
+    public WordItem() {}
+
     public WordItem(File file, Integer lines, Integer index, String original, String chinese) {
         this.file = file;
         this.lines = lines;

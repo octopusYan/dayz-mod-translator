@@ -3,6 +3,7 @@ package cn.octopusyan.dmt.utils;
 import cn.octopusyan.dmt.common.config.Constants;
 import cn.octopusyan.dmt.common.config.Context;
 import cn.octopusyan.dmt.common.util.ProcessesUtil;
+import cn.octopusyan.dmt.model.WordCsvItem;
 import cn.octopusyan.dmt.model.WordItem;
 import cn.octopusyan.dmt.view.ConsoleLog;
 import org.apache.commons.io.FileUtils;
@@ -174,20 +175,32 @@ public class PBOUtil {
 
             try (LineIterator it = FileUtils.lineIterator(file, StandardCharsets.UTF_8.name())) {
                 while (it.hasNext()) {
+                    lineIndex.addAndGet(1);
+
                     String line = it.next();
                     WordItem word = wordMap.get(lineIndex.get());
 
                     // 当前行是否有需要替换的文本
-                    // TODO 是否替换空文本
                     if (word != null && line.contains(word.getOriginal())) {
-                        line = line.substring(0, word.getIndex()) +
-                                line.substring(word.getIndex()).replace(word.getOriginal(), word.getChinese());
+
+                        if (word instanceof WordCsvItem csvItem) {
+                            // 繁体部分
+                            String trad = line.substring(csvItem.getIndexTrad(), csvItem.getIndex());
+                            // 简体部分
+                            String simp = line.substring(csvItem.getIndex());
+                            // 拼接
+                            line = line.substring(0, csvItem.getIndexTrad())
+                                    // Pattern.quote 处理转义字符
+                                    + trad.replaceFirst(Pattern.quote(csvItem.getOriginalTrad()), csvItem.getChinese())
+                                    + simp.replaceFirst(Pattern.quote(csvItem.getOriginal()), csvItem.getChinese());
+                        } else {
+                            line = line.substring(0, word.getIndex()) +
+                                    line.substring(word.getIndex()).replace(word.getOriginal(), word.getChinese());
+                        }
                     }
 
                     // 缓存行内容
                     lines.add(line);
-
-                    lineIndex.addAndGet(1);
                 }
             } catch (IOException e) {
                 consoleLog.error(STR."文件[\{file.getAbsoluteFile()}]读取出错", e);
@@ -266,25 +279,55 @@ public class PBOUtil {
         ArrayList<WordItem> wordItems = new ArrayList<>();
         AtomicInteger lines = new AtomicInteger(0);
         int index = -1;
+        int indexTrad = -1;
+        int indexOriginal = -1;
         String line;
         while (it.hasNext()) {
             line = it.next();
-            List<String> split = Arrays.stream(line.split(",")).toList();
+            boolean contains = line.contains("\"");
+            String delimit = contains ? "\",\"" : ",";
+            List<String> split = Arrays.stream(line.split(delimit)).toList();
+            lines.addAndGet(1);
 
-            if (lines.get() == 0) {
-                index = split.indexOf("\"chinese\"");
-            } else if (index < split.size()) {
-                // 原文
-                String original = split.get(index).replaceAll("\"", "");
-                // 开始下标
-                Integer startIndex = line.indexOf(original);
-                // 添加单词
-                if (original.length() > 1) {
-                    wordItems.add(new WordItem(file, lines.get(), startIndex, original, ""));
+            if (lines.get() == 1) {
+                for (int i = 0; i < split.size(); i++) {
+                    String colName = StringUtils.lowerCase(split.get(i));
+                    if (colName.contains("original")) {
+                        indexOriginal = i;
+                    } else if (colName.contains("chinesesimp")) {
+                        index = i;
+                    } else if (colName.contains("chinese")) {
+                        indexTrad = i;
+                    }
                 }
+                continue;
             }
 
-            lines.addAndGet(1);
+            if (index < split.size()) {
+                // 中文内容
+                String chinese = split.get(index).replaceAll("\",?", "");
+                // 已有中文翻译则跳过
+                if (containsChinese(chinese))
+                    continue;
+
+                // 原文
+                String original = split.get(indexOriginal).replaceAll("\"", "");
+                // 繁体内容
+                String originalTrad = split.get(indexTrad).replaceAll("\"", "");
+                // 开始下标
+                String searchSr = contains ? "\",\"" : ",";
+                int startIndex = StringUtils.ordinalIndexOf(line, searchSr, index);
+                int startIndexTrad = StringUtils.ordinalIndexOf(line, searchSr, indexTrad);
+
+                // 如果带引号
+                startIndex += (contains ? 3 : 1);
+                startIndexTrad += (contains ? 3 : 1);
+
+                // 添加单词
+                if (original.length() > 1) {
+                    wordItems.add(new WordCsvItem(file, lines.get(), startIndex, chinese, "", startIndexTrad, originalTrad));
+                }
+            }
         }
         return wordItems;
     }
@@ -302,23 +345,24 @@ public class PBOUtil {
         String line;
         Matcher matcher;
         while (it.hasNext()) {
+            lines.addAndGet(1);
             line = it.next();
             matcher = LAYOUT_PATTERN.matcher(line);
-            if (StringUtils.isNoneEmpty(line) && matcher.matches()) {
-                // 原文
-                String original = matcher.group(1);
 
-                if (!original.startsWith("#")) {
-                    // 开始下标
-                    Integer startIndex = line.indexOf(original);
-                    // 添加单词
-                    if (original.length() > 1) {
-                        wordItems.add(new WordItem(file, lines.get(), startIndex, original, ""));
-                    }
+            if (StringUtils.isEmpty(line) || !matcher.matches())
+                continue;
+
+            // 原文
+            String original = matcher.group(1);
+
+            if (!original.startsWith("#")) {
+                // 开始下标
+                Integer startIndex = line.indexOf(original);
+                // 添加单词
+                if (original.length() > 1) {
+                    wordItems.add(new WordItem(file, lines.get(), startIndex, original, ""));
                 }
             }
-
-            lines.addAndGet(1);
         }
         return wordItems;
     }
@@ -335,24 +379,23 @@ public class PBOUtil {
         AtomicInteger lines = new AtomicInteger(0);
 
         while (it.hasNext()) {
-            String line = it.next();
-
-            Matcher matcher = CPP_PATTERN.matcher(line);
-            if (!line.contains("$") && matcher.matches()) {
-
-                String name = matcher.group(1);
-
-                // 原始文本
-                int startIndex = line.indexOf(name) + name.length();
-                String original = matcher.group(2);
-
-                // 添加单词
-                if (original.length() > 1) {
-                    wordItems.add(new WordItem(file, lines.get(), startIndex, original, ""));
-                }
-            }
-
             lines.addAndGet(1);
+            String line = it.next();
+            Matcher matcher = CPP_PATTERN.matcher(line);
+
+            // 不匹配 或 是变量 则跳过
+            if (!matcher.matches() || line.contains("$"))
+                continue;
+
+            String name = matcher.group(1);
+            // 原始文本
+            int startIndex = line.indexOf(name) + name.length();
+            String original = matcher.group(2);
+
+            // 添加单词
+            if (original.length() > 1) {
+                wordItems.add(new WordItem(file, lines.get(), startIndex, original, ""));
+            }
         }
         return wordItems;
     }
@@ -416,5 +459,15 @@ public class PBOUtil {
 
     private static String outFilePath(File file, String suffix) {
         return file.getParentFile().getAbsolutePath() + File.separator + FileUtil.mainName(file) + suffix;
+    }
+
+    /**
+     * 给定字符串是否含有中文
+     *
+     * @param str 需要判断的字符串
+     * @return 是否含有中文
+     */
+    private static boolean containsChinese(String str) {
+        return Pattern.compile("[\u4e00-\u9fa5]").matcher(str).find();
     }
 }
