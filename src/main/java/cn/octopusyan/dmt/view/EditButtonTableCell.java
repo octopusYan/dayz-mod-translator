@@ -64,10 +64,7 @@ public class EditButtonTableCell extends TableCell<WordItem, WordItem> {
         if (empty) {
             setGraphic(null);
         } else {
-            /*
-             * TODO 添加多个操作按钮
-             * setGraphic(Hbox(btn1,btn2));
-             */
+            // 添加多个操作按钮
             setGraphic(new HBox(edit, translate));
         }
     }
