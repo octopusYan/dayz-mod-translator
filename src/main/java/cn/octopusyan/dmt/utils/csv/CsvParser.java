@@ -39,6 +39,10 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	 */
 	private boolean inQuotes;
 	/**
+	 * 连续双引号计数
+	 */
+	private int continuousCount = 0;
+	/**
 	 * 当前读取字段
 	 */
 	private final StrBuilder currentField = new StrBuilder(512);
@@ -257,9 +261,15 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 			if (inQuotes) {
 				//引号内，作为内容，直到引号结束
 				if (c == config.textDelimiter) {
-					// End of quoted text
-					inQuotes = false;
+					if(buf.canRead(1) && buf.read(1) == CharUtil.DOUBLE_QUOTES) {
+						continuousCount++;
+					} else if(continuousCount != 0 && (continuousCount + 1) % 2 == 0) {
+						continuousCount = 0;
+					} else {
+						inQuotes = false;
+					}
 				} else {
+					if(continuousCount != 0) continuousCount = 0;
 					// 字段内容中新行
 					if (isLineEnd(c, preChar)) {
 						inQuotesLineCount++;
@@ -448,6 +458,14 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 		 */
 		char get() {
 			return this.buf[this.position++];
+		}
+
+		boolean canRead(int position) {
+			return (this.position + position - 1) < limit;
+		}
+
+		char read(int position) {
+			return this.buf[this.position + position - 1];
 		}
 
 		/**
