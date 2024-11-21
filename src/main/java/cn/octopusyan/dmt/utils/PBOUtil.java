@@ -518,7 +518,7 @@ public class PBOUtil {
      * @param str 需要判断的字符串
      * @return 是否含有中文
      */
-    private static boolean containsChinese(String str) {
+    public static boolean containsChinese(String str) {
         return Pattern.compile("[\u4e00-\u9fa5]").matcher(str).find();
     }
 }

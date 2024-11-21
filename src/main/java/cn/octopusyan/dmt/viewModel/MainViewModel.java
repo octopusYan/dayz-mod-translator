@@ -10,6 +10,7 @@ import cn.octopusyan.dmt.task.UnpackTask;
 import cn.octopusyan.dmt.task.listener.DefaultTaskListener;
 import cn.octopusyan.dmt.translate.DelayWord;
 import cn.octopusyan.dmt.translate.TranslateUtil;
+import cn.octopusyan.dmt.utils.PBOUtil;
 import cn.octopusyan.dmt.view.ConsoleLog;
 import cn.octopusyan.dmt.view.alert.AlertUtil;
 import javafx.application.Platform;
@@ -18,7 +19,6 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.scene.control.ProgressIndicator;
-import org.apache.commons.lang3.StringUtils;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -107,9 +107,11 @@ public class MainViewModel extends BaseViewModel<MainController> {
         if (wordItems.isEmpty()) return;
 
         if (translateTask == null) {
-            List<WordItem> words = wordItems.stream().filter(item -> StringUtils.isEmpty(item.getChinese())).toList();
+            List<WordItem> words = wordItems.stream().filter(item -> !PBOUtil.containsChinese(item.getChinese())).toList();
             delayQueue = TranslateUtil.getDelayQueue(words);
             translateTask = createTask();
+            translateTask.execute();
+            return;
         }
 
         if (!translateTask.isRunning()) {
