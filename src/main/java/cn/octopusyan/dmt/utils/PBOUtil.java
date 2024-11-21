@@ -366,14 +366,14 @@ public class PBOUtil {
             if (StringUtils.isEmpty(original)) continue;
 
             // 是否可格式化读取
-            if (row.size() == 15) {
+            if (row.size() >= 15) {
 
-                String chinese = row.get(11);
+                String chinese = row.get(14);
 
                 // 已有中文翻译，则跳过
                 if (containsChinese(chinese)) continue;
 
-                item = new WordCsvItem(file, lines, original, chinese, row.get(14));
+                item = new WordCsvItem(file, lines, original, chinese, row.get(11));
             } else {
                 item = new WordCsvItem(file, lines, row.getFirst(), original);
             }
