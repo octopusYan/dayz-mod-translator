@@ -130,6 +130,14 @@
             <version>${jackson.version}</version>
         </dependency>
 
+        <!-- Hutool -->
+        <!-- https://hutool.cn -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
+            <version>5.8.33</version>
+        </dependency>
+
         <!-- https://kordamp.org/ikonli/ -->
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>

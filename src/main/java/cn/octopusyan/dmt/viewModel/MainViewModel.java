@@ -11,6 +11,7 @@ import cn.octopusyan.dmt.task.listener.DefaultTaskListener;
 import cn.octopusyan.dmt.translate.DelayWord;
 import cn.octopusyan.dmt.translate.TranslateUtil;
 import cn.octopusyan.dmt.view.ConsoleLog;
+import cn.octopusyan.dmt.view.alert.AlertUtil;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -149,6 +150,13 @@ public class MainViewModel extends BaseViewModel<MainController> {
                 Platform.runLater(() -> controller.onPackOver(file));
             }
 
+            @Override
+            public void onFailed(Throwable throwable) {
+                super.onFailed(throwable);
+                Platform.runLater(() -> {
+                    AlertUtil.getInstance().exception(new RuntimeException(throwable)).show();
+                });
+            }
         });
         packTask.execute();
     }

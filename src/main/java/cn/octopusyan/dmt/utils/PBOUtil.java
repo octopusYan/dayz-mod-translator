@@ -5,6 +5,7 @@ import cn.octopusyan.dmt.common.config.Context;
 import cn.octopusyan.dmt.common.util.ProcessesUtil;
 import cn.octopusyan.dmt.model.WordCsvItem;
 import cn.octopusyan.dmt.model.WordItem;
+import cn.octopusyan.dmt.utils.csv.*;
 import cn.octopusyan.dmt.view.ConsoleLog;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
@@ -15,7 +16,10 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -154,7 +158,7 @@ public class PBOUtil {
      *
      * @param wordFileMap 文件对应文本map
      */
-    public static void writeWords(Map<File, List<WordItem>> wordFileMap) {
+    public static void writeWords(Map<File, List<WordItem>> wordFileMap) throws IOException {
 
         for (Map.Entry<File, List<WordItem>> entry : wordFileMap.entrySet()) {
 
@@ -165,58 +169,133 @@ public class PBOUtil {
 
             // 需要转bin文件时，写入bak目录下cpp文件
             boolean hasBin = new File(outFilePath(file, ".bin")).exists();
+            // 写入TMP下文件
             String writePath = file.getAbsolutePath().replace(Constants.BAK_DIR_PATH, Constants.TMP_DIR_PATH);
             File writeFile = hasBin ? file : new File(writePath);
 
-            AtomicInteger lineIndex = new AtomicInteger(0);
-            List<String> lines = new ArrayList<>();
+            List<String> lines;
 
-            consoleLog.info("正在写入文件[{}]", writeFile.getAbsolutePath());
+            consoleLog.info("正在写入文件 => {}", writeFile.getAbsolutePath());
 
             try (LineIterator it = FileUtils.lineIterator(file, StandardCharsets.UTF_8.name())) {
-                while (it.hasNext()) {
-                    lineIndex.addAndGet(1);
 
-                    String line = it.next();
-                    WordItem word = wordMap.get(lineIndex.get());
-
-                    // 当前行是否有需要替换的文本
-                    if (word != null && line.contains(word.getOriginal())) {
-
-                        if (word instanceof WordCsvItem csvItem) {
-                            // 繁体部分
-                            String trad = line.substring(csvItem.getIndexTrad(), csvItem.getIndex());
-                            // 简体部分
-                            String simp = line.substring(csvItem.getIndex());
-                            // 拼接
-                            line = line.substring(0, csvItem.getIndexTrad())
-                                    // Pattern.quote 处理转义字符
-                                    + trad.replaceFirst(Pattern.quote(csvItem.getOriginalTrad()), csvItem.getChinese())
-                                    + simp.replaceFirst(Pattern.quote(csvItem.getOriginal()), csvItem.getChinese());
-                        } else {
-                            line = line.substring(0, word.getIndex()) +
-                                    line.substring(word.getIndex()).replace(word.getOriginal(), word.getChinese());
-                        }
-                    }
-
-                    // 缓存行内容
-                    lines.add(line);
+                if (FILE_NAME_STRING_TABLE.equals(file.getName())) {
+                    // 写入 CSV 文件
+                    lines = writeCsv(file, it, wordMap);
+                } else {
+                    // 写入 CPP 或 layout 文件
+                    lines = writeOther(it, wordMap);
                 }
             } catch (IOException e) {
                 consoleLog.error(STR."文件[\{file.getAbsoluteFile()}]读取出错", e);
+                throw e;
             }
 
+            // 写入文件
             try {
-                // 写入文件
                 String charsets = writeFile.getName().endsWith(".layout") ? FileUtil.getCharsets(writeFile) : StandardCharsets.UTF_8.name();
                 FileUtils.writeLines(writeFile, charsets, lines);
             } catch (IOException e) {
-                consoleLog.error(STR."文件(\{writeFile.getAbsoluteFile()})写入失败", e);
+                consoleLog.error(STR."文件[\{file.getAbsoluteFile()}]写入出错", e);
+                throw e;
             }
 
             // CPP转BIN (覆盖TMP下BIN文件)
             if (hasBin) cpp2bin(writeFile);
         }
+    }
+
+    /**
+     * 写入 CPP 或 layout 文件
+     *
+     * @param it      行遍历器
+     * @param wordMap 替换文本map
+     * @return 待写入行文本列表
+     */
+    private static List<String> writeOther(LineIterator it, Map<Integer, WordItem> wordMap) {
+        AtomicInteger lineIndex = new AtomicInteger(0);
+        List<String> lines = new ArrayList<>();
+        while (it.hasNext()) {
+            lineIndex.addAndGet(1);
+
+            String line = it.next();
+            WordItem word = wordMap.get(lineIndex.get());
+
+            if (word != null && line.contains(word.getOriginal())) {
+                line = line.substring(0, word.getIndex()) +
+                        line.substring(word.getIndex()).replace(word.getOriginal(), word.getChinese());
+            }
+
+            lines.add(line);
+        }
+        return lines;
+    }
+
+
+    /**
+     * 写入 CSV 文件
+     *
+     * @param file
+     * @param it      行遍历器
+     * @param wordMap 替换文本map
+     * @return 待写入行文本列表
+     */
+    private static List<String> writeCsv(File file, LineIterator it, Map<Integer, WordItem> wordMap) {
+        AtomicInteger lineIndex = new AtomicInteger(0);
+        List<String> lines = new ArrayList<>();
+
+        CsvReader reader = CsvUtil.getReader(CsvReadConfig.defaultConfig());
+        CsvData data = reader.read(file);
+        var rowMap = data.getRows().stream()
+                .collect(Collectors.toMap(CsvRow::getOriginalLineNumber, Function.identity()));
+
+        while (it.hasNext()) {
+            lineIndex.addAndGet(1);
+            String line = it.next();
+
+            WordCsvItem word = (WordCsvItem) wordMap.get(lineIndex.get());
+
+            // 以 , 开头的行（视为内容带换行符，跳过）
+            // ,,开头视为空值行（不跳过,尽量还原文本结构
+            if (word == null && line.startsWith(",") && !line.startsWith(",,")) {
+                continue;
+            }
+
+            // 判断当前行是否有需要替换的文本
+            if (word != null && line.contains(word.getOriginal())) {
+
+                // 是否规整(可简单读取的)
+                if (word.isRegular()) {
+                    CsvRow strings = rowMap.get(Integer.valueOf(lineIndex.get()).longValue() - 1L);
+                    // 替换翻译文本
+                    strings.set(11, word.getChinese());// 繁体
+                    strings.set(14, word.getChinese());// 简体
+                    line = strings.stream().map(item -> STR."\"\{item}\"").collect(Collectors.joining(","));
+
+                    // 处理带换行符文本
+                    var length = line.split("\r\n|\r|\n").length;
+                    for (int i = 1; i < length; i++) {
+                        lineIndex.addAndGet(1);
+                        String next = it.next();
+                        consoleLog.debug(STR."next => \"\{next}\"");
+                    }
+                } else {
+                    // 不规整的直接原文填充
+                    // Language,original,english,czech,german,russian,polish,hungarian,italian,spanish,french,chinese,japanese,portuguese,chinesesimp
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("\"").append(word.getHeader()).append("\"");
+                    for (int i = 1; i < 15; i++) {
+                        String str = (i == 11 || i == 14) ? word.getChinese() : word.getOriginal();
+                        sb.append(",\"").append(str).append("\"");
+                    }
+                    line = sb.toString();
+                }
+            }
+
+            lines.add(line);
+        }
+
+        return lines;
     }
 
     /**
@@ -251,7 +330,7 @@ public class PBOUtil {
             }
             // CSV
             if (FILE_NAME_STRING_TABLE.equals(file.getName())) {
-                return findWordByCSV(file, it);
+                return findWordByCSV(file);
             }
             // layout
             if (file.getName().endsWith(".layout")) {
@@ -268,67 +347,39 @@ public class PBOUtil {
         return Collections.emptyList();
     }
 
-    /**
-     * 从csv文件中读取可翻译文本
-     *
-     * @param file csv文件
-     * @param it   行内容遍历器
-     * @return 可翻译文本列表
-     */
-    private static List<WordItem> findWordByCSV(File file, LineIterator it) {
+
+    private static List<WordItem> findWordByCSV(File file) {
         ArrayList<WordItem> wordItems = new ArrayList<>();
-        AtomicInteger lines = new AtomicInteger(0);
-        int index = -1;
-        int indexTrad = -1;
-        int indexOriginal = -1;
-        String line;
-        while (it.hasNext()) {
-            line = it.next();
-            boolean contains = line.contains("\"");
-            String delimit = contains ? "\",\"" : ",";
-            List<String> split = Arrays.stream(line.split(delimit)).toList();
-            lines.addAndGet(1);
 
-            if (lines.get() == 1) {
-                for (int i = 0; i < split.size(); i++) {
-                    String colName = StringUtils.lowerCase(split.get(i));
-                    if (colName.contains("original")) {
-                        indexOriginal = i;
-                    } else if (colName.contains("chinesesimp")) {
-                        index = i;
-                    } else if (colName.contains("chinese")) {
-                        indexTrad = i;
-                    }
-                }
-                continue;
+        CsvReadConfig config = CsvReadConfig.defaultConfig().setTrimField(true).setContainsHeader(true);
+        CsvReader reader = CsvUtil.getReader(config);
+        CsvData data = reader.read(file);
+
+        // 读取CSV
+        List<CsvRow> rows = data.getRows();
+        for (CsvRow row : rows) {
+            WordItem item;
+            int lines = (int) (row.getOriginalLineNumber() + 1);
+
+            String original = row.get(1);
+            // 跳过原文为空的行
+            if (StringUtils.isEmpty(original)) continue;
+
+            // 是否可格式化读取
+            if (row.size() == 15) {
+
+                String chinese = row.get(11);
+
+                // 已有中文翻译，则跳过
+                if (containsChinese(chinese)) continue;
+
+                item = new WordCsvItem(file, lines, original, chinese, row.get(14));
+            } else {
+                item = new WordCsvItem(file, lines, row.getFirst(), original);
             }
-
-            if (index < split.size()) {
-                // 中文内容
-                String chinese = split.get(index).replaceAll("\",?", "");
-                // 已有中文翻译则跳过
-                if (containsChinese(chinese))
-                    continue;
-
-                // 原文
-                String original = split.get(indexOriginal).replaceAll("\"", "");
-                // 繁体内容
-                String originalTrad = split.get(indexTrad).replaceAll("\"", "");
-                // 开始下标
-                String searchSr = contains ? "\",\"" : ",";
-                int startIndex = StringUtils.ordinalIndexOf(line, searchSr, index);
-                int startIndexTrad = StringUtils.ordinalIndexOf(line, searchSr, indexTrad);
-
-                // 如果带引号
-                startIndex += (contains ? 3 : 1);
-                startIndexTrad += (contains ? 3 : 1);
-
-                // 添加单词
-                if (original.length() > 1) {
-                    wordItems.add(new WordCsvItem(file, lines.get(), startIndex, chinese, "", startIndexTrad, originalTrad));
-                }
-            }
+            wordItems.add(item);
         }
+
         return wordItems;
     }
 
