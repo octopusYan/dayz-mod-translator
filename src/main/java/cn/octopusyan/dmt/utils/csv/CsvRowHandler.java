@@ -9,10 +9,10 @@ package cn.octopusyan.dmt.utils.csv;
 @FunctionalInterface
 public interface CsvRowHandler {
 
-	/**
-	 * 处理行数据
-	 *
-	 * @param row 行数据
-	 */
-	void handle(CsvRow row);
+    /**
+     * 处理行数据
+     *
+     * @param row 行数据
+     */
+    void handle(CsvRow row);
 }
