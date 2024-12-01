@@ -8,9 +8,6 @@
 <br>
 [![license](https://img.shields.io/github/license/octopusYan/dayz-mod-translator)](https://github.com/octopusYan/dayz-mod-translator)
 ![commit](https://img.shields.io/github/commit-activity/m/octopusYan/dayz-mod-translator?color=%23ff69b4)
-<br>
-![stars](https://img.shields.io/github/stars/octopusYan/dayz-mod-translator?style=social)
-![GitHub all releases](https://img.shields.io/github/downloads/octopusYan/dayz-mod-translator/total?style=social)
 
 <br>
 
