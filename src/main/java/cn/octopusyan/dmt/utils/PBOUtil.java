@@ -146,6 +146,10 @@ public class PBOUtil {
             return wordItems;
 
         List<File> files = new ArrayList<>(FileUtils.listFiles(file, FILE_NAME_LIST, true));
+        List<String> names = files.stream().map(File::getName).toList();
+        if(names.contains("config.bin") && names.contains("config.cpp")) {
+            files = files.stream().filter(item -> "config.cpp".equals(item.getName())).toList();
+        }
         for (File item : files) {
             wordItems.addAll(findWordByFile(item));
         }
