@@ -1,7 +1,7 @@
 package cn.octopusyan.dmt.common.manager.http;
 
 import cn.octopusyan.dmt.common.enums.ProxySetup;
-import cn.octopusyan.dmt.common.manager.http.response.BodyHandler;
+import cn.octopusyan.dmt.common.manager.http.response.DownloadBodyHandler;
 import cn.octopusyan.dmt.common.util.JsonUtil;
 import cn.octopusyan.dmt.model.ProxyInfo;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -130,7 +130,7 @@ public class HttpUtil {
         }
 
         // 下载处理器
-        var handler = BodyHandler.create(
+        var handler = DownloadBodyHandler.create(
                 Path.of(savePath),
                 StandardOpenOption.CREATE, StandardOpenOption.WRITE
         );
