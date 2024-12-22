@@ -89,6 +89,9 @@ public class MainController extends BaseController<MainViewModel> {
         fileChooser.getExtensionFilters().add(extFilter);
     }
 
+    private File historySelectFolder;
+    private File historySaveFolder;
+
     @Override
     public Pane getRootPanel() {
         return root;
@@ -150,6 +153,8 @@ public class MainController extends BaseController<MainViewModel> {
      * 打开文件选择器
      */
     public void selectFile() {
+        if (historySelectFolder != null)
+            fileChooser.setInitialDirectory(historySelectFolder);
         selectFile(fileChooser.showOpenDialog(getWindow()));
     }
 
@@ -247,10 +252,14 @@ public class MainController extends BaseController<MainViewModel> {
     public void onPackOver(File packFile) {
         // 选择文件保存地址
         fileChooser.setInitialFileName(packFile.getName());
+        if (historySaveFolder != null)
+            fileChooser.setInitialDirectory(historySaveFolder);
         File file = fileChooser.showSaveDialog(getWindow());
 
         if (file == null)
             return;
+
+        historySaveFolder = file.getParentFile();
 
         if (file.exists()) {
             //文件已存在，则删除覆盖文件
@@ -322,6 +331,10 @@ public class MainController extends BaseController<MainViewModel> {
      * 打开文件
      */
     private void selectFile(File file) {
+        if (file != null) {
+            // 设置选择文件记录
+            historySelectFolder = file.getParentFile();
+        }
         viewModel.selectFile(file);
         viewModel.unpack();
     }
