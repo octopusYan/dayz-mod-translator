@@ -37,11 +37,6 @@ public class FreeBaiduTranslateProcessor extends AbstractTranslateProcessor {
         return "https://fanyi.baidu.com/transapi";
     }
 
-    @Override
-    public int qps() {
-        return source().getDefaultQps();
-    }
-
     /**
      * 翻译处理
      *

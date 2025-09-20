@@ -25,11 +25,6 @@ public class FreeGoogleTranslateProcessor extends AbstractTranslateProcessor {
         return "https://translate.googleapis.com/translate_a/single";
     }
 
-    @Override
-    public int qps() {
-        return source().getDefaultQps();
-    }
-
     /**
      * 翻译处理
      *
